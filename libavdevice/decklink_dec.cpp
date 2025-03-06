@@ -129,7 +129,15 @@ public:
         virtual HRESULT STDMETHODCALLTYPE Decommit() { return S_OK; }
 
         // IUnknown methods
-        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, LPVOID *ppv) { return E_NOINTERFACE; }
+        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, LPVOID *ppv)
+        {
+            if (memcmp(&iid, &IID_IDeckLinkMemoryAllocator, sizeof(REFIID)) == 0) {
+                *ppv = (IDeckLinkMemoryAllocator*)this;
+                AddRef();
+                return S_OK;
+            }
+            return E_NOINTERFACE;
+        }
         virtual ULONG   STDMETHODCALLTYPE AddRef(void) { return ++_refs; }
         virtual ULONG   STDMETHODCALLTYPE Release(void)
         {
@@ -694,7 +702,15 @@ public:
         decklink_input_callback(AVFormatContext *_avctx);
         ~decklink_input_callback();
 
-        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, LPVOID *ppv) { return E_NOINTERFACE; }
+        virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, LPVOID *ppv)
+        {
+            if (memcmp(&iid, &IID_IDeckLinkInputCallback, sizeof(REFIID)) == 0) {
+                *ppv = (IDeckLinkInputCallback*)this;
+                AddRef();
+                return S_OK;
+            }
+            return E_NOINTERFACE;
+        }
         virtual ULONG STDMETHODCALLTYPE AddRef(void);
         virtual ULONG STDMETHODCALLTYPE  Release(void);
         virtual HRESULT STDMETHODCALLTYPE VideoInputFormatChanged(BMDVideoInputFormatChangedEvents, IDeckLinkDisplayMode*, BMDDetectedVideoInputFormatFlags);
