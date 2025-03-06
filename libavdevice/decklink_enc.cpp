@@ -109,7 +109,16 @@ public:
         _ancillary->AddRef();
         return S_OK;
     }
-    virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, LPVOID *ppv) { return E_NOINTERFACE; }
+    virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, LPVOID *ppv) 
+    {
+        if (memcmp(&iid, &IID_IDeckLinkVideoFrame, sizeof(REFIID)) == 0)
+        {
+            *ppv = (IDeckLinkVideoFrame*)this;
+            AddRef();
+            return S_OK;
+        }
+        return E_NOINTERFACE;
+    }
     virtual ULONG   STDMETHODCALLTYPE AddRef(void)                            { return ++_refs; }
     virtual ULONG   STDMETHODCALLTYPE Release(void)
     {
@@ -157,7 +166,16 @@ public:
         return S_OK;
     }
     virtual HRESULT STDMETHODCALLTYPE ScheduledPlaybackHasStopped(void)       { return S_OK; }
-    virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, LPVOID *ppv) { return E_NOINTERFACE; }
+    virtual HRESULT STDMETHODCALLTYPE QueryInterface(REFIID iid, LPVOID *ppv)
+    {
+        if (memcmp(&iid, &IID_IDeckLinkVideoOutputCallback, sizeof(REFIID)) == 0)
+        {
+            *ppv = (IDeckLinkVideoOutputCallback*)this;
+            AddRef();
+            return S_OK;
+        }
+        return E_NOINTERFACE;
+    }
     virtual ULONG   STDMETHODCALLTYPE AddRef(void)                            { return 1; }
     virtual ULONG   STDMETHODCALLTYPE Release(void)                           { return 1; }
 };
